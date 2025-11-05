@@ -1,239 +1,219 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tik Tak Toe</title>
-    <style>
-        body {
-            background: #142126;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tic Tac Toe</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --board-bg: #1e293b;
+    --cell-bg: #334155;
+    --x-color: #38bdf8;
+    --o-color: #facc15;
+    --text: #f8fafc;
+    --accent: #3b82f6;
+    --win-color: #10b981;
+  }
 
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        #container {
-            width: 70%;
-            height: 75vh;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            flex-direction: column;
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
 
-        }
+  main {
+    background: var(--board-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 450px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+  }
 
-        .boxes {
-            width: 50%;
-            height: 90%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: column;
-        }
+  header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
 
-        .box {
-            width: 100%;
-            height: 100%;
-        }
+  header h1 {
+    color: var(--accent);
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+  }
 
-        .btn {
-            width: calc(100%/3);
-            height: 100%;
-            margin: auto;
-            border: 1px solid #121e22;
-            background: #203740;
-            color: #34BFB1;
-            font-size: 300%;
-        }
+  header p {
+    font-size: 1rem;
+    color: var(--text);
+    opacity: 0.8;
+  }
 
-        .btn:active {
-            background: #142126;
-            border: 2px solid #203740;
-        }
+  .boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+  }
 
-        .alertBox {
-            width: 40%;
-            height: 50%;
-            background: #a3bfb7;
-            text-align: center;
-            display: none;
-            justify-content: space-evenly;
-            align-items: center;
-            flex-direction: column;
-            border-radius: 20px;
-            font-weight: bolder;
-            font-size: larger;
-        }
+  .btn {
+    background: var(--cell-bg);
+    border: none;
+    border-radius: 12px;
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: bold;
+    color: var(--x-color);
+    cursor: pointer;
+    transition: 0.2s;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-        .NGbtn {
-            background: #f2b138;
-            border-radius: 5px;
-            border: none;
-            width: 35%;
-            height: 15%;
-            font: small-caps bold 100% Georgia;
-        }
+  .btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    background: #475569;
+  }
 
-        .NGbtn:active {
-            width: 40%;
-        }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 
-        .resetBtn {
-            background: #43bfb1;
-            border-radius: 5px;
-            border: none;
-            margin: 1%;
-            width: 20%;
-            height: 10%;
-            font: small-caps bold 100% Georgia;
-        }
+  .alertBox {
+    display: none;
+    margin-top: 1rem;
+    background: #1e293b;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid var(--accent);
+    width: 100%;
+  }
 
-        .resetBtn:active {
-            background: none;
-            color: #43bfb1;
-            border-radius: 5px;
-            border: 2px double #43bfb1;
-            width: 20%;
-            height: 10%;
-            font: small-caps bold 150% Georgia;
-        }
+  .alertBox p {
+    margin: 0.5rem 0;
+  }
 
+  .NGbtn, .resetBtn {
+    margin-top: 1rem;
+    background: var(--o-color);
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #111;
+    transition: 0.3s;
+  }
 
-        @media all and (min-width: 280px) and (max-width:780px) {
+  .NGbtn:hover, .resetBtn:hover {
+    background: #fef08a;
+  }
 
-            #container {
-                width: 100%;
-                height: 80vh;
-                justify-content: space-between;
-            }
+  footer {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 
-            .boxes {
-                width: 100%;
-                height: 65%;
-            }
-
-            .alertBox {
-                width: 90%;
-                height: 30%;
-                justify-content: space-around;
-                padding-bottom: 1%;
-                font-weight: bolder;
-            }
-
-            .resetBtn {
-                width: 40%;
-                font: small-caps bold 100% Georgia;
-            }
-
-            .resetBtn:active {
-                width: 40%;
-                font: small-caps bold 130% Georgia;
-            }
-        }
-    </style>
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.7rem; }
+    .btn { font-size: clamp(1.5rem, 10vw, 2.5rem); }
+  }
+</style>
 </head>
-
 <body>
-    <div id="container">
+  <main>
+    <header>
+      <h1>Tic Tac Toe</h1>
+      <p id="playerTurn">Player X's turn</p>
+    </header>
 
-        <div class="boxes">
-            <div class="box"><button class="btn"></button><button class="btn"></button><button class="btn"></button>
-            </div>
-            <div class="box"><button class="btn"></button class="btn"><button class="btn"></button><button
-                    class="btn"></button></div>
-            <div class="box"><button class="btn"></button><button class="btn"></button><button class="btn"></button>
-            </div>
-        </div>
-        <div class="alertBox">
-            <p>Player</p>
-            <p>What'll be Happened?</p>
-            <button class="NGbtn">New Game</button>
-        </div>
-        <button class="resetBtn">Reset Game</button>
-    </div>
-    <script>
-        let container = document.getElementById('container');
-        let buttons = document.getElementsByClassName('btn');
-        let NGbtn = document.getElementsByClassName('NGbtn');
-        let playerTurn = document.getElementsByTagName('p')[0];
-        let msg = document.getElementsByTagName('p')[1];
-        let alertBox = document.getElementsByClassName('alertBox')[0];
-        let resetBtn = document.getElementsByClassName('resetBtn')[0];
-        let turn = true;
-        const patterns = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ];
+    <section class="boxes">
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+      <button class="btn"></button>
+    </section>
 
-        let buttonDisabled = () => {
-            for (btn of buttons) {
-                btn.disabled = true;
-            }
-        };
+    <article class="alertBox" id="alertBox">
+      <p id="winnerMsg"></p>
+      <button class="NGbtn" id="newGameBtn">New Game</button>
+    </article>
 
-        NGbtn[0].addEventListener('click', () => {
-            window.location.reload(true);
-        });
+    <footer>
+      <button class="resetBtn" id="resetBtn">Reset Game</button>
+    </footer>
+  </main>
 
-        resetBtn.addEventListener('click', () => {
-            for (btn of buttons) {
-                btn.innerText = "";
-                btn.disabled = false;
-            };
-        });
+<script>
+  const buttons = document.querySelectorAll('.btn');
+  const playerTurn = document.getElementById('playerTurn');
+  const alertBox = document.getElementById('alertBox');
+  const winnerMsg = document.getElementById('winnerMsg');
+  const newGameBtn = document.getElementById('newGameBtn');
+  const resetBtn = document.getElementById('resetBtn');
 
-        for (let btn of buttons) {
-            btn.addEventListener('click', () => {
-                if (turn) {
-                    btn.style.color = '#43bfb1'
-                    btn.innerHTML = '✔';
-                    playerTurn.innerText = 'Player Turn: ◯'
-                    turn = false;
-                } else {
-                    btn.style.color = '#f29e38';
-                    btn.innerHTML = 'Ｏ';
-                    playerTurn.innerText = 'Player Turn: ✔';
-                    turn = true;
-                }
-                btn.disabled = true;
-                checkWinning()
-            })
-        };
+  let turn = true;
+  const patterns = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
 
-        let checkWinning = () => {
-            for (let i of patterns) {
-                let pattval = buttons[i[0]].innerHTML;
-                let pattval1 = buttons[i[1]].innerHTML;
-                let pattval2 = buttons[i[2]].innerHTML;
-                if (pattval != "" && pattval1 != "" && pattval2 != "") {
-                    if (pattval == pattval1 && pattval1 == pattval2) {
-                        msg.innerText = `This game has been won by ${pattval}`;
-                        console.log('winning ', pattval);
-                        buttonDisabled();
-                        resetBtn.style.display = 'none';
-                        alertBox.style.display = 'flex';
-                        if (screen.width >= 780) {
-                            container.style.flexDirection = 'row';
-                        }
-                        else {
-                            container.style.flexDirection = 'column-reverse';
-                        }
+  function checkWinner() {
+    for (let pattern of patterns) {
+      const [a, b, c] = pattern;
+      if (buttons[a].textContent && buttons[a].textContent === buttons[b].textContent && buttons[a].textContent === buttons[c].textContent) {
+        winnerMsg.textContent = `Winner: ${buttons[a].textContent}`;
+        buttons.forEach(btn => btn.disabled = true);
+        alertBox.style.display = 'block';
+        return true;
+      }
+    }
+    if([...buttons].every(btn => btn.textContent)) {
+      winnerMsg.textContent = `It's a Draw!`;
+      alertBox.style.display = 'block';
+    }
+  }
 
-                    };
-                };
-            };
-        };
-    </script>
+  buttons.forEach(btn => btn.addEventListener('click', () => {
+    btn.textContent = turn ? 'X' : 'O';
+    btn.style.color = turn ? '#38bdf8' : '#facc15';
+    btn.disabled = true;
+    turn = !turn;
+    playerTurn.textContent = `Player ${turn ? 'X' : 'O'}'s turn`;
+    checkWinner();
+  }));
+
+  newGameBtn.addEventListener('click', () => location.reload());
+  resetBtn.addEventListener('click', () => {
+    buttons.forEach(btn => {
+      btn.textContent = '';
+      btn.disabled = false;
+    });
+    turn = true;
+    playerTurn.textContent = `Player X's turn`;
+    alertBox.style.display = 'none';
+  });
+</script>
 </body>
-
 </html>
